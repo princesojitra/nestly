@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { PlaceholderScreen } from './PlaceholderScreen';
+import { ProfileScreen } from '../../features/authentication/presentation/screens/ProfileScreen';
 import { BoxIcon, ChartIcon, HomeIcon, UserIcon, WrenchIcon } from '../../shared/components';
 import { colors } from '../../shared/theme/tokens';
 
@@ -33,10 +34,6 @@ function MaintenanceScreen() {
 function AnalyticsScreen() {
   return <PlaceholderScreen title="Analytics" />;
 }
-function ProfileScreen() {
-  return <PlaceholderScreen title="Profile" />;
-}
-
 export function MainTabs() {
   return (
     <Tab.Navigator screenOptions={screenOptions}>

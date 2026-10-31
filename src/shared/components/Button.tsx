@@ -8,11 +8,12 @@ type Props = PressableProps & {
   variant?: 'primary' | 'secondary';
 };
 
-export function Button({ label, variant = 'primary', style, ...rest }: Props) {
+export function Button({ label, variant = 'primary', disabled, style, ...rest }: Props) {
   const isPrimary = variant === 'primary';
   return (
     <Pressable
       accessibilityRole="button"
+      disabled={disabled}
       style={(state) => [
         {
           paddingVertical: spacing.md + 1,
@@ -22,7 +23,7 @@ export function Button({ label, variant = 'primary', style, ...rest }: Props) {
           backgroundColor: isPrimary ? colors.surfaceDark : colors.surface,
           borderWidth: isPrimary ? 0 : 1,
           borderColor: colors.lineStrong,
-          opacity: state.pressed ? 0.85 : 1,
+          opacity: disabled ? 0.5 : state.pressed ? 0.85 : 1,
         },
         typeof style === 'function' ? style(state) : style,
       ]}
