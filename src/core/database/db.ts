@@ -6,6 +6,8 @@ import { open } from '@op-engineering/op-sqlite';
 export const db = open({ name: 'nestly.db' });
 
 export async function runMigrations() {
+  // SQLite doesn't enforce foreign keys unless told to, per connection.
+  await db.execute('PRAGMA foreign_keys = ON;');
   await db.execute(`
     CREATE TABLE IF NOT EXISTS schema_migrations (
       version INTEGER PRIMARY KEY,

@@ -49,3 +49,11 @@ export function UserIcon({ color, size = 22 }: IconProps) {
     </Svg>
   );
 }
+
+export function ShieldIcon({ color, size = 22 }: IconProps) {
+  return (
+    <Svg {...base(size)} fill="none" stroke={color} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+    </Svg>
+  );
+}

@@ -6,6 +6,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Text, Button, BoxIcon } from '../../../../shared/components';
 import { colors, radius, spacing } from '../../../../shared/theme/tokens';
 import { useAssetQuery, useDeleteAssetMutation } from '../useAssets';
+import { WarrantyCard } from '../../../warranty/presentation/components/WarrantyCard';
 import type { InventoryStackParamList } from '../../../../app/navigation/InventoryStack';
 
 type Props = NativeStackScreenProps<InventoryStackParamList, 'AssetDetail'>;
@@ -100,8 +101,10 @@ export function AssetDetailScreen({ navigation, route }: Props) {
           </Text>
         ) : null}
 
-        {/* Warranty status and maintenance history show here once those
-            features exist — no data model for either yet. */}
+        <WarrantyCard assetId={assetId} onPress={() => navigation.navigate('AddWarranty', { assetId })} />
+
+        {/* Maintenance history shows here once that feature exists — no
+            data model for it yet. */}
 
         <View style={{ flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg }}>
           <View style={{ flex: 1 }}>

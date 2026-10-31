@@ -15,6 +15,7 @@ export const colors = {
   lineStrong: '#E3E0D5',
   onDark: '#F6F5F0',
   danger: '#B3554B',
+  warning: '#B8863D',
 } as const;
 
 export const spacing = {
