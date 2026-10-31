@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Button } from '../../../../shared/components';
-import { colors, spacing } from '../../../../shared/theme/tokens';
+import { colors, radius, spacing } from '../../../../shared/theme/tokens';
 import { supabaseAuthRepository } from '../../data/supabaseAuthRepository';
+import { useAuthStore } from '../useAuthStore';
 
 export function ProfileScreen() {
+  const insets = useSafeAreaInsets();
+  const email = useAuthStore((s) => s.user?.email);
   const [error, setError] = useState<string | null>(null);
 
   const onSignOut = async () => {
@@ -18,16 +22,27 @@ export function ProfileScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', padding: spacing.xxl, gap: spacing.md }}>
-      <Text variant="title">Profile</Text>
+    <View style={{ flex: 1, backgroundColor: colors.background, paddingTop: insets.top + spacing.lg, paddingHorizontal: spacing.xxl, gap: spacing.lg }}>
+      <Text variant="display">Profile</Text>
+
+      <View style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, padding: spacing.md }}>
+        <Text variant="caption" color={colors.textMutedStrong}>
+          Signed in as
+        </Text>
+        <Text variant="label">{email ?? 'Unknown'}</Text>
+      </View>
+
       <Text variant="body" color={colors.textMuted}>
-        Settings, notifications, and data export are coming in a later milestone.
+        Notification preferences, data export, sync status, and a dark theme land in later milestones — each needs infrastructure
+        (push notifications, Supabase sync) this app doesn't have yet.
       </Text>
+
       {error ? (
         <Text variant="caption" color={colors.danger}>
           {error}
         </Text>
       ) : null}
+
       <Button label="Sign out" variant="secondary" onPress={onSignOut} />
     </View>
   );
