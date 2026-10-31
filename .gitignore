@@ -1,0 +1,52 @@
+# OSX
+.DS_Store
+
+# Xcode
+ios/build/
+ios/Pods/
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+ios/.xcode.env.local
+
+# Android/IntelliJ
+android/app/build/
+android/build/
+android/.gradle
+android/local.properties
+*.iml
+.idea
+android/app/release/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.metro-health-check*
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods
+/ios/Pods/
+
+# Ruby / Bundler
+/vendor/bundle/
+
+# Env / secrets
+.env
+.env.local
+*.keystore
+!debug.keystore
+
+# Testing
+/coverage
+
+# Supabase local
+supabase/.temp/
