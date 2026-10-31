@@ -3,6 +3,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { runMigrations } from '../../core/database/db';
 import { ensureAssetsTable } from '../../features/inventory/data/sqliteAssetRepository';
 import { ensureWarrantiesTable } from '../../features/warranty/data/sqliteWarrantyRepository';
+import { ensureMaintenanceTables } from '../../features/maintenance/data/sqliteMaintenanceRepository';
 import { colors } from '../../shared/theme/tokens';
 
 export function DatabaseProvider({ children }: { children: ReactNode }) {
@@ -12,6 +13,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
     runMigrations()
       .then(ensureAssetsTable)
       .then(ensureWarrantiesTable)
+      .then(ensureMaintenanceTables)
       .then(() => setReady(true));
   }, []);
 

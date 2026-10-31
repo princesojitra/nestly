@@ -7,6 +7,7 @@
    - **Authentication** ✅ — Supabase Auth (email/password), Welcome/SignIn/SignUp screens (React Hook Form + Zod), session-gated root navigator, sign-out from Profile. Verified on iOS Simulator: validation, successful-path wiring, and graceful network-error handling (tested against placeholder Supabase credentials — a real project's URL/key are needed before this actually authenticates). OAuth and "forgot password" are explicitly deferred, not built.
    - **Dashboard** ✅ — real greeting from the signed-in user, spec'd empty state (no stats mocked — Inventory/Warranty/Maintenance have no data layer yet), CTA navigates to Inventory.
    - **Inventory (incl. asset details)** ✅ — SQLite-backed list/add/edit/detail (search, category filters, empty/error/loading states). First real persistence; found and fixed a real touch-handling bug via simulator testing (see commit).
-   - warranty → maintenance → analytics → profile/settings.
+   - **Warranty** ✅ — scoped as one warranty per asset (no dedicated tab in the approved design), status card on Asset Detail, SQLite with `ON DELETE CASCADE` from assets. Verified via unit tests; live simulator click-through was blocked by input flakiness in a very long-running simulator session (see commit) rather than a known app issue.
+   - maintenance → analytics → profile/settings.
 5. **Offline and cloud sync** — local persistence, sync queue, retry logic, conflict handling, Supabase integration.
 6. **Quality and release prep** — full test pass, iOS/Android verification, visual/accessibility/security/performance review, CI/CD, docs complete.

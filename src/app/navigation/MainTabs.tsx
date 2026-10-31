@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { PlaceholderScreen } from './PlaceholderScreen';
 import { InventoryStack } from './InventoryStack';
+import { MaintenanceStack } from './MaintenanceStack';
 import { DashboardScreen } from '../../features/dashboard/presentation/screens/DashboardScreen';
 import { ProfileScreen } from '../../features/authentication/presentation/screens/ProfileScreen';
 import { BoxIcon, ChartIcon, HomeIcon, UserIcon, WrenchIcon } from '../../shared/components';
@@ -24,9 +25,6 @@ const screenOptions = {
   tabBarStyle: { backgroundColor: '#FBFAF7', borderTopColor: colors.lineStrong },
 };
 
-function MaintenanceScreen() {
-  return <PlaceholderScreen title="Maintenance" />;
-}
 function AnalyticsScreen() {
   return <PlaceholderScreen title="Analytics" />;
 }
@@ -45,7 +43,7 @@ export function MainTabs() {
       />
       <Tab.Screen
         name="Maintenance"
-        component={MaintenanceScreen}
+        component={MaintenanceStack}
         options={{ tabBarIcon: ({ color, size }) => <WrenchIcon color={color} size={size} /> }}
       />
       <Tab.Screen
