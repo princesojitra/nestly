@@ -102,6 +102,11 @@ export const sqliteMaintenanceRepository: MaintenanceRepository = {
     return rows.map(toCompletion);
   },
 
+  async listAllCompletions() {
+    const { rows } = await db.execute('SELECT * FROM maintenance_completions ORDER BY completed_at DESC;');
+    return rows.map(toCompletion);
+  },
+
   async complete(task, completedAt, cost, notes) {
     await db.execute('INSERT INTO maintenance_completions (id, task_id, completed_at, cost, notes) VALUES (?, ?, ?, ?, ?);', [
       generateId(),

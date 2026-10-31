@@ -7,6 +7,7 @@ export type MaintenanceRepository = {
   update: (id: string, task: NewMaintenanceTask) => Promise<MaintenanceTask>;
   remove: (id: string) => Promise<void>;
   listCompletions: (taskId: string) => Promise<MaintenanceCompletion[]>;
+  listAllCompletions: () => Promise<MaintenanceCompletion[]>;
   // Logs a completion and, for recurring tasks, advances the task's due date.
   complete: (task: MaintenanceTask, completedAt: string, cost: number | null, notes: string | null) => Promise<void>;
 };

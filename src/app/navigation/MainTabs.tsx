@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { PlaceholderScreen } from './PlaceholderScreen';
 import { InventoryStack } from './InventoryStack';
 import { MaintenanceStack } from './MaintenanceStack';
 import { DashboardScreen } from '../../features/dashboard/presentation/screens/DashboardScreen';
+import { AnalyticsScreen } from '../../features/analytics/presentation/screens/AnalyticsScreen';
 import { ProfileScreen } from '../../features/authentication/presentation/screens/ProfileScreen';
 import { BoxIcon, ChartIcon, HomeIcon, UserIcon, WrenchIcon } from '../../shared/components';
 import { colors } from '../../shared/theme/tokens';
@@ -25,9 +25,6 @@ const screenOptions = {
   tabBarStyle: { backgroundColor: '#FBFAF7', borderTopColor: colors.lineStrong },
 };
 
-function AnalyticsScreen() {
-  return <PlaceholderScreen title="Analytics" />;
-}
 export function MainTabs() {
   return (
     <Tab.Navigator screenOptions={screenOptions}>

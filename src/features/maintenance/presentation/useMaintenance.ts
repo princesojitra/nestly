@@ -25,6 +25,10 @@ export function useMaintenanceCompletionsQuery(taskId: string | undefined) {
   });
 }
 
+export function useAllMaintenanceCompletionsQuery() {
+  return useQuery({ queryKey: [...completionsKey, 'all'], queryFn: sqliteMaintenanceRepository.listAllCompletions });
+}
+
 export function useCreateMaintenanceTaskMutation() {
   const queryClient = useQueryClient();
   return useMutation({
