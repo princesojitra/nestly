@@ -4,6 +4,7 @@ import { runMigrations } from '../../core/database/db';
 import { ensureAssetsTable } from '../../features/inventory/data/sqliteAssetRepository';
 import { ensureWarrantiesTable } from '../../features/warranty/data/sqliteWarrantyRepository';
 import { ensureMaintenanceTables } from '../../features/maintenance/data/sqliteMaintenanceRepository';
+import { ensureSyncTables, refreshSyncCounts } from '../../core/sync/SyncQueue';
 import { colors } from '../../shared/theme/tokens';
 
 export function DatabaseProvider({ children }: { children: ReactNode }) {
@@ -14,6 +15,8 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
       .then(ensureAssetsTable)
       .then(ensureWarrantiesTable)
       .then(ensureMaintenanceTables)
+      .then(ensureSyncTables)
+      .then(refreshSyncCounts)
       .then(() => setReady(true));
   }, []);
 

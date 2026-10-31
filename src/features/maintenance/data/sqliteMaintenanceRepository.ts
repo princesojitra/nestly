@@ -1,4 +1,5 @@
 import { db } from '../../../core/database/db';
+import { enqueueSync } from '../../../core/sync/SyncQueue';
 import { addDays } from '../domain/Maintenance';
 import type { MaintenanceCompletion, MaintenanceTask, NewMaintenanceTask } from '../domain/Maintenance';
 import type { MaintenanceRepository } from '../domain/MaintenanceRepository';
@@ -49,6 +50,31 @@ function toTask(row: Record<string, unknown>): MaintenanceTask {
   };
 }
 
+function taskSyncPayload(task: MaintenanceTask): Record<string, unknown> {
+  return {
+    id: task.id,
+    asset_id: task.assetId,
+    title: task.title,
+    recurring: task.recurring,
+    interval_days: task.intervalDays,
+    due_date: task.dueDate,
+    cost: task.cost,
+    notes: task.notes,
+    created_at: task.createdAt,
+    updated_at: task.updatedAt,
+  };
+}
+
+function completionSyncPayload(completion: MaintenanceCompletion): Record<string, unknown> {
+  return {
+    id: completion.id,
+    task_id: completion.taskId,
+    completed_at: completion.completedAt,
+    cost: completion.cost,
+    notes: completion.notes,
+  };
+}
+
 function toCompletion(row: Record<string, unknown>): MaintenanceCompletion {
   return {
     id: row.id as string,
@@ -78,7 +104,9 @@ export const sqliteMaintenanceRepository: MaintenanceRepository = {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [id, task.assetId, task.title, task.recurring ? 1 : 0, task.intervalDays, task.dueDate, task.cost, task.notes, now, now],
     );
-    return { id, createdAt: now, updatedAt: now, ...task };
+    const created = { id, createdAt: now, updatedAt: now, ...task };
+    await enqueueSync('maintenance_task', id, 'upsert', taskSyncPayload(created));
+    return created;
   },
 
   async update(id, task: NewMaintenanceTask) {
@@ -90,11 +118,13 @@ export const sqliteMaintenanceRepository: MaintenanceRepository = {
     );
     const updated = await sqliteMaintenanceRepository.get(id);
     if (!updated) throw new Error('Maintenance task not found after update');
+    await enqueueSync('maintenance_task', id, 'upsert', taskSyncPayload(updated));
     return updated;
   },
 
   async remove(id) {
     await db.execute('DELETE FROM maintenance_tasks WHERE id = ?;', [id]);
+    await enqueueSync('maintenance_task', id, 'delete', null);
   },
 
   async listCompletions(taskId) {
@@ -108,16 +138,21 @@ export const sqliteMaintenanceRepository: MaintenanceRepository = {
   },
 
   async complete(task, completedAt, cost, notes) {
+    const completionId = generateId();
     await db.execute('INSERT INTO maintenance_completions (id, task_id, completed_at, cost, notes) VALUES (?, ?, ?, ?, ?);', [
-      generateId(),
+      completionId,
       task.id,
       completedAt,
       cost,
       notes,
     ]);
+    await enqueueSync('maintenance_completion', completionId, 'upsert', completionSyncPayload({ id: completionId, taskId: task.id, completedAt, cost, notes }));
+
     if (task.recurring && task.intervalDays) {
       const nextDueDate = addDays(completedAt, task.intervalDays);
-      await db.execute('UPDATE maintenance_tasks SET due_date = ?, updated_at = ? WHERE id = ?;', [nextDueDate, new Date().toISOString(), task.id]);
+      const updatedAt = new Date().toISOString();
+      await db.execute('UPDATE maintenance_tasks SET due_date = ?, updated_at = ? WHERE id = ?;', [nextDueDate, updatedAt, task.id]);
+      await enqueueSync('maintenance_task', task.id, 'upsert', taskSyncPayload({ ...task, dueDate: nextDueDate, updatedAt }));
     }
   },
 };

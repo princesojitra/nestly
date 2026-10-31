@@ -1,4 +1,5 @@
 jest.mock('../../../../core/database/db', () => ({ db: { execute: jest.fn() } }));
+jest.mock('../../../../core/sync/SyncQueue', () => ({ enqueueSync: jest.fn() }));
 
 import { db } from '../../../../core/database/db';
 import { ensureWarrantiesTable, sqliteWarrantyRepository } from '../sqliteWarrantyRepository';

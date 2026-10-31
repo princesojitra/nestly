@@ -5,6 +5,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './queryClient';
 import { AuthProvider } from './AuthProvider';
 import { DatabaseProvider } from './DatabaseProvider';
+import { SyncProvider } from './SyncProvider';
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
@@ -12,7 +13,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <DatabaseProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              <SyncProvider>{children}</SyncProvider>
+            </AuthProvider>
           </DatabaseProvider>
         </QueryClientProvider>
       </SafeAreaProvider>

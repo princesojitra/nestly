@@ -1,4 +1,5 @@
 import { db } from '../../../core/database/db';
+import { enqueueSync } from '../../../core/sync/SyncQueue';
 import type { Asset, AssetCategory, NewAsset } from '../domain/Asset';
 import type { AssetRepository } from '../domain/AssetRepository';
 
@@ -23,6 +24,19 @@ export async function ensureAssetsTable() {
 // unique for multi-device Supabase sync (Milestone 5).
 function generateId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function toSyncPayload(asset: Asset): Record<string, unknown> {
+  return {
+    id: asset.id,
+    name: asset.name,
+    category: asset.category,
+    purchase_date: asset.purchaseDate,
+    price: asset.price,
+    description: asset.description,
+    created_at: asset.createdAt,
+    updated_at: asset.updatedAt,
+  };
 }
 
 function toAsset(row: Record<string, unknown>): Asset {
@@ -62,7 +76,9 @@ export const sqliteAssetRepository: AssetRepository = {
       now,
       now,
     ]);
-    return { id, createdAt: now, updatedAt: now, ...asset };
+    const created = { id, createdAt: now, updatedAt: now, ...asset };
+    await enqueueSync('asset', id, 'upsert', toSyncPayload(created));
+    return created;
   },
 
   async update(id, asset: NewAsset) {
@@ -78,10 +94,12 @@ export const sqliteAssetRepository: AssetRepository = {
     ]);
     const updated = await sqliteAssetRepository.get(id);
     if (!updated) throw new Error('Asset not found after update');
+    await enqueueSync('asset', id, 'upsert', toSyncPayload(updated));
     return updated;
   },
 
   async remove(id) {
     await db.execute('DELETE FROM assets WHERE id = ?;', [id]);
+    await enqueueSync('asset', id, 'delete', null);
   },
 };

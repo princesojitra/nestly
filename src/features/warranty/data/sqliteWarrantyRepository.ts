@@ -1,4 +1,5 @@
 import { db } from '../../../core/database/db';
+import { enqueueSync } from '../../../core/sync/SyncQueue';
 import type { NewWarranty, Warranty } from '../domain/Warranty';
 import type { WarrantyRepository } from '../domain/WarrantyRepository';
 
@@ -13,6 +14,17 @@ export async function ensureWarrantiesTable() {
       updated_at TEXT NOT NULL
     );
   `);
+}
+
+function toSyncPayload(warranty: Warranty): Record<string, unknown> {
+  return {
+    asset_id: warranty.assetId,
+    provider: warranty.provider,
+    start_date: warranty.startDate,
+    end_date: warranty.endDate,
+    created_at: warranty.createdAt,
+    updated_at: warranty.updatedAt,
+  };
 }
 
 function toWarranty(row: Record<string, unknown>): Warranty {
@@ -46,10 +58,13 @@ export const sqliteWarrantyRepository: WarrantyRepository = {
          updated_at = excluded.updated_at;`,
       [warranty.assetId, warranty.provider, warranty.startDate, warranty.endDate, createdAt, now],
     );
-    return { ...warranty, createdAt, updatedAt: now };
+    const saved = { ...warranty, createdAt, updatedAt: now };
+    await enqueueSync('warranty', warranty.assetId, 'upsert', toSyncPayload(saved));
+    return saved;
   },
 
   async remove(assetId) {
     await db.execute('DELETE FROM warranties WHERE asset_id = ?;', [assetId]);
+    await enqueueSync('warranty', assetId, 'delete', null);
   },
 };
