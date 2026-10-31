@@ -5,6 +5,7 @@
 3. **Foundation** ✅ — RN CLI + TypeScript project, design-system tokens + Button/Card/Text/icons, React Navigation (bottom tabs + stack), Zustand + TanStack Query providers, SQLite (`@op-engineering/op-sqlite`) + Supabase client with Keychain-backed session storage, Jest/RNTL + ESLint + GitHub Actions CI. Verified booting on iOS Simulator and Android emulator.
 4. **Core features**, incrementally:
    - **Authentication** ✅ — Supabase Auth (email/password), Welcome/SignIn/SignUp screens (React Hook Form + Zod), session-gated root navigator, sign-out from Profile. Verified on iOS Simulator: validation, successful-path wiring, and graceful network-error handling (tested against placeholder Supabase credentials — a real project's URL/key are needed before this actually authenticates). OAuth and "forgot password" are explicitly deferred, not built.
-   - dashboard → inventory → asset details → warranty → maintenance → analytics → profile/settings.
+   - **Dashboard** ✅ — real greeting from the signed-in user, spec'd empty state (no stats mocked — Inventory/Warranty/Maintenance have no data layer yet), CTA navigates to Inventory.
+   - inventory → asset details → warranty → maintenance → analytics → profile/settings.
 5. **Offline and cloud sync** — local persistence, sync queue, retry logic, conflict handling, Supabase integration.
 6. **Quality and release prep** — full test pass, iOS/Android verification, visual/accessibility/security/performance review, CI/CD, docs complete.
