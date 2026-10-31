@@ -4,7 +4,7 @@ A premium home management application that helps users organize household assets
 
 ## Status
 
-Early scaffolding. Product design exploration is in progress — see [`docs/DESIGN_REVIEW.md`](docs/DESIGN_REVIEW.md) once visual directions are drafted. No app code yet; see [`docs/DEVELOPMENT_ROADMAP.md`](docs/DEVELOPMENT_ROADMAP.md) for milestones.
+Foundation (Milestone 3) is in place: RN CLI + TypeScript project, design-system tokens, navigation, state management, and database/backend adapters. Verified booting on both iOS Simulator and an Android emulator. No features yet — see [`docs/DEVELOPMENT_ROADMAP.md`](docs/DEVELOPMENT_ROADMAP.md) for what's next.
 
 ## Stack
 
@@ -22,4 +22,17 @@ React Native CLI (no Expo) + TypeScript, React Navigation, Zustand, TanStack Que
 
 ## Getting started
 
-Not yet runnable — React Native project scaffolding happens in Milestone 3 (see roadmap).
+```bash
+npm install
+cp .env.example .env   # fill in your Supabase project URL/key
+bundle install && cd ios && bundle exec pod install && cd ..
+
+npm start              # Metro bundler
+npm run ios            # or: npm run android
+```
+
+```bash
+npx tsc --noEmit        # type check
+npx eslint .            # lint
+npx jest                # unit tests
+```

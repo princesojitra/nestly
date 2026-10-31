@@ -1,0 +1,26 @@
+# Native iOS/Android builds aren't run here (needs a macOS runner + full SDK
+# setup); tsc/lint/test catch most regressions cheaply. Revisit once CI
+# minutes/infra are worth spending on a real build step.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Lint
+        run: npx eslint .
+      - name: Test
+        run: npx jest --ci
