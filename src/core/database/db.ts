@@ -5,8 +5,8 @@ import { open } from '@op-engineering/op-sqlite';
 // this file only owns the connection and the migration bookkeeping table.
 export const db = open({ name: 'nestly.db' });
 
-export function runMigrations() {
-  db.execute(`
+export async function runMigrations() {
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS schema_migrations (
       version INTEGER PRIMARY KEY,
       applied_at TEXT NOT NULL DEFAULT (datetime('now'))
