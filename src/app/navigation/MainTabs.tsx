@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { PlaceholderScreen } from './PlaceholderScreen';
+import { DashboardScreen } from '../../features/dashboard/presentation/screens/DashboardScreen';
 import { ProfileScreen } from '../../features/authentication/presentation/screens/ProfileScreen';
 import { BoxIcon, ChartIcon, HomeIcon, UserIcon, WrenchIcon } from '../../shared/components';
 import { colors } from '../../shared/theme/tokens';
@@ -22,9 +23,6 @@ const screenOptions = {
   tabBarStyle: { backgroundColor: '#FBFAF7', borderTopColor: colors.lineStrong },
 };
 
-function DashboardScreen() {
-  return <PlaceholderScreen title="Dashboard" />;
-}
 function InventoryScreen() {
   return <PlaceholderScreen title="Inventory" />;
 }
